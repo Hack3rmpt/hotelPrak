@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rooms List</title>
+</head>
+<body style="background-color:#fadadd">
+<div style="margin-left: auto; margin-right: auto; width: 500px">
+    <h1>Список номеров</h1>
+    <form action="/room/add" method="post" th:object="${room}">
+        <input type="text" name="TypeRoom" placeholder="Тип номера" th:field="*{TypeRoom}" required>
+        <input type="text" name="DescriptionRoom" placeholder="Описание номера" th:field="*{DescriptionRoom}" required>
+        <button type="submit" formmethod="post">Добавить номер</button>
+    </form>
+    <h1>Все номера:</h1>
+    <ul>
+        <th:block th:each="room: ${rooms}">
+            <li>
+                <span th:text="${room.TypeRoom} + ' ' + ${room.DescriptionRoom}"></span>
+                <form action="/room/update" method="post" style="display:inline;" th:object="${room}">
+                    <input type="hidden" name="id" th:value="${room.id}">
+                    <input type="text" name="TypeRoom" th:value="${room.TypeRoom}" placeholder="Тип номера" required>
+                    <input type="text" name="DescriptionRoom" th:value="${room.DescriptionRoom}"
+                           placeholder="Описание номера" required>
+                    <button type="submit" formmethod="post">Обновить</button>
+                </form>
+                <form action="/room/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${room.id}">
+                    <button type="submit" formmethod="post">Удалить</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</div>
+</body>
+</html>

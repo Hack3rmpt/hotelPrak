@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HomePage</title>
+</head>
+<body style="background-color:#fadadd">
+<div style="margin-left: auto; margin-right: auto; width: 500px; text-align: center;">
+
+    <p th:text="${name}"></p>
+
+    <table style="width: 70%; margin-left: 80px">
+        <tr>
+            <td>
+                <form action="/calculator" style="display: inline-block;">
+                    <button>Go to Calculator</button>
+                </form>
+            </td>
+            <td>
+                <form action="/converter" style="display: inline-block;">
+                    <button>Go to Converter</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form action="/guest/all" style="display: inline-block;">
+                    <button>Go to Guest</button>
+                </form>
+            </td>
+            <td>
+                <form action="/room/all" style="display: inline-block;">
+                    <button>Go to Rooms</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <form action="/feedback/all">
+        <button>Go to Feedbacks</button>
+    </form>
+</div>
+</body>
+</html>
