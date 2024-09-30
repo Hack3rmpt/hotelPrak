@@ -8,19 +8,19 @@
 <div style="margin-left: auto; margin-right: auto; width: 500px">
     <h1>Список номеров</h1>
     <form action="/room/add" method="post" th:object="${room}">
-        <input type="text" name="TypeRoom" placeholder="Тип номера" th:field="*{TypeRoom}" required>
-        <input type="text" name="DescriptionRoom" placeholder="Описание номера" th:field="*{DescriptionRoom}" required>
+        <input type="text" name="typeRoom" placeholder="Тип номера" th:field="*{typeRoom}" required>
+        <input type="text" name="descriptionRoom" placeholder="Описание номера" th:field="*{descriptionRoom}" required>
         <button type="submit" formmethod="post">Добавить номер</button>
     </form>
     <h1>Все номера:</h1>
     <ul>
         <th:block th:each="room: ${rooms}">
             <li>
-                <span th:text="${room.TypeRoom} + ' ' + ${room.DescriptionRoom}"></span>
+                <span th:text="${room.typeRoom} + ' ' + ${room.descriptionRoom}"></span>
                 <form action="/room/update" method="post" style="display:inline;" th:object="${room}">
                     <input type="hidden" name="id" th:value="${room.id}">
-                    <input type="text" name="TypeRoom" th:value="${room.TypeRoom}" placeholder="Тип номера" required>
-                    <input type="text" name="DescriptionRoom" th:value="${room.DescriptionRoom}"
+                    <input type="text" name="typeRoom" th:value="${room.typeRoom}" placeholder="Тип номера" required>
+                    <input type="text" name="descriptionRoom" th:value="${room.descriptionRoom}"
                            placeholder="Описание номера" required>
                     <button type="submit" formmethod="post">Обновить</button>
                 </form>

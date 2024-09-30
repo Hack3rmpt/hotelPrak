@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/room")
 public class RoomController {
@@ -33,8 +35,9 @@ public class RoomController {
     }
 
     @PostMapping("/update")
-    public String updateRoom(@Valid @ModelAttribute("room") RoomModel room, BindingResult result) {
+    public String updateRoom(@Valid @ModelAttribute("room") RoomModel room, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("rooms", roomService.findAllRooms());
             return "roomList";
         }
         roomService.updateRoom(room);
@@ -42,15 +45,14 @@ public class RoomController {
     }
 
     @PostMapping("/delete")
-    public String deleteRoom(@RequestParam long id) {
+    public String deleteRoom(@RequestParam UUID id) {
         roomService.deleteRoom(id);
         return "redirect:/room/all";
     }
 
     @GetMapping("/all/{id}")
-    public String getIdRoom(@PathVariable("id") long id, Model model) {
-        model.addAttribute("rooms", roomService.findRoomById(id));
-        model.addAttribute("room", new RoomModel());
-        return "roomList";
+    public String getRoomById(@PathVariable("id") UUID id, Model model) {
+        model.addAttribute("room", roomService.findRoomById(id));
+        return "roomDetails";
     }
 }

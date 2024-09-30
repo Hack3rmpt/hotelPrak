@@ -8,7 +8,9 @@
 <div style="margin-left: auto; margin-right: auto; width: 500px">
     <h1 style="margin-left: 25%;">Список отзывов</h1>
     <form action="/feedback/add" method="post" th:object="${feedback}">
-        <input type="text" name="guest" placeholder="Гость" th:field="*{guest}" required>
+        <select name="guest" th:field="*{guest}" required>
+            <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+        </select>
         <select name="evaluation" th:field="*{evaluation}" required>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -25,26 +27,16 @@
         <button type="submit" formmethod="post">Добавить отзыв</button>
     </form>
 
-    <h1 style="margin-left: 25%;">Поиск по оценке:</h1>
-    <form action="/feedback/search" method="get">
-        <select name="evaluation" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <button type="submit" formmethod="get">Поиск</button>
-    </form>
-
     <h1 style="margin-left: 25%;">Все отзывы:</h1>
     <ul>
         <th:block th:each="feedback: ${feedbacks}">
             <li>
-                <span th:text="${feedback.guest} + ' ' + ${feedback.evaluation} + ' ' + ${feedback.comment} + ' ' + ${feedback.picture}"></span>
+                <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName} + ' ' + ${feedback.evaluation} + ' ' + ${feedback.comment} + ' ' + ${feedback.picture}"></span>
                 <form action="/feedback/update" method="post" style="display:inline;" th:object="${feedback}">
                     <input type="hidden" name="id" th:value="${feedback.id}">
-                    <input type="text" name="guest" th:value="${feedback.guest}" placeholder="Гость" required>
+                    <select name="guest" th:field="*{guest}" required>
+                        <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+                    </select>
                     <select name="evaluation" th:value="${feedback.evaluation}" required>
                         <option th:selected="${feedback.evaluation == 1}" value="1">1</option>
                         <option th:selected="${feedback.evaluation == 2}" value="2">2</option>

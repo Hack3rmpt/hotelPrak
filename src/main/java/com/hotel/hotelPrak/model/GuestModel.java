@@ -1,46 +1,46 @@
 package com.hotel.hotelPrak.model;
 
-import jakarta.annotation.Nullable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.lang.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
+@Table(name = "guest")
 public class GuestModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     private String firstName;
     private String lastName;
+
     @Pattern(regexp = "\\d+", message = "Серия паспорта должна содержать только цифры")
     private String passportNumber;
+
     @Size(min = 6, message = "Номер телефона слишком короткий")
     private String phoneNumber;
+
     @Nullable
     private String email;
-    private boolean isDeleted;
 
-    public GuestModel(Long id, String firstName, String lastName, String passportNumber, String phoneNumber, @Nullable String email, boolean isDeleted) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.passportNumber = passportNumber;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.isDeleted = isDeleted;
-    }
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id", nullable = false)
+    private RoomModel roomS;
 
-    public GuestModel() {
-    }
+    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FeedbackModel> feedbacks = new ArrayList<>();
 
-    public Long getId() {
+    // Геттеры и сеттеры
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -60,39 +60,43 @@ public class GuestModel {
         this.lastName = lastName;
     }
 
-    public @Size(min = 5, message = "Серия паспорта слишком короткая") String getPassportNumber() {
+    public String getPassportNumber() {
         return passportNumber;
     }
 
-    public void setPassportNumber(@Size(min = 5, message = "Серия паспорта слишком короткая") String passportNumber) {
+    public void setPassportNumber(String passportNumber) {
         this.passportNumber = passportNumber;
     }
 
-    public @Size(min = 6, message = "Номер телефона слишком короткий") String getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(@Size(min = 6, message = "Номер телефона слишком короткий") String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    @Nullable
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Nullable String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public RoomModel getRoomS() {
+        return roomS;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setRoomS(RoomModel roomS) {
+        this.roomS = roomS;
     }
 
-//    public boolean isDeleted() { return isDeleted; }
-//    public void setDeleted(boolean deleted) { isDeleted = deleted; }
+    public List<FeedbackModel> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<FeedbackModel> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
 }

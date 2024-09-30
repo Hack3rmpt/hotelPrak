@@ -1,20 +1,14 @@
 package com.hotel.hotelPrak.service;
 
 import com.hotel.hotelPrak.model.FeedbackModel;
-import com.hotel.hotelPrak.model.GuestModel;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface FeedbackService {
-    public List<FeedbackModel> findAllFeedback();
-
-    public FeedbackModel findFeedbackById(long id);
-
-    public FeedbackModel addFeedback(FeedbackModel Feedback);
-
-    public FeedbackModel updateFeedback(FeedbackModel Feedback);
-
-    public  void deleteFeedback(long id);
-
-    List<FeedbackModel> findFeedbackByEvaluation(int evaluation);
+    List<FeedbackModel> findAllFeedback();
+    FeedbackModel findFeedbackById(UUID id);
+    FeedbackModel addFeedback(FeedbackModel feedback);
+    FeedbackModel updateFeedback(FeedbackModel feedback);
+    void deleteFeedback(UUID id);
 }

@@ -19,6 +19,9 @@
             phoneNumber not < 6
         </div>
         <input type="text" name="email" placeholder="Email" th:field="*{email}">
+        <select name="roomS" th:field="*{roomS}" required>
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
+        </select>
 
         <button type="submit" formmethod="post">Добавить гостя</button>
     </form>
@@ -34,7 +37,7 @@
     <ul>
         <th:block th:each="guest: ${guests}">
             <li>
-                <span th:text="${guest.firstName} + ' ' + ${guest.lastName} + ' ' + ${guest.passportNumber} + ' ' + ${guest.phoneNumber} + ' ' + ${guest.email}"></span>
+                <span th:text="${guest.firstName} + ' ' + ${guest.lastName} + ' ' + ${guest.passportNumber} + ' ' + ${guest.phoneNumber} + ' ' + ${guest.email} + ' ' + ${guest.roomS.typeRoom} + ' ' + ${guest.roomS.descriptionRoom}"></span>
                 <form action="/guest/update" method="post" style="display:inline;" th:object="${guest}">
                     <input type="hidden" name="id" th:value="${guest.id}">
                     <input type="text" name="firstName" th:value="${guest.firstName}" placeholder="Имя" required>
@@ -42,15 +45,14 @@
                     <input type="text" name="passportNumber" th:value="${guest.passportNumber}" placeholder="Номер паспорта" required>
                     <input type="text" name="phoneNumber" th:value="${guest.phoneNumber}" placeholder="Номер телефона" required>
                     <input type="text" name="email" th:value="${guest.email}" placeholder="Email">
+                    <select name="roomS" th:field="*{roomS}" required>
+                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
+                    </select>
                     <button type="submit" formmethod="post">Обновить</button>
                 </form>
                 <form action="/guest/delete" method="post" style="display:inline;">
                     <input type="hidden" name="id" th:value="${guest.id}">
                     <button type="submit" formmethod="post">Удалить</button>
-                </form>
-                <form action="/guest/soft-delete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${guest.id}">
-                    <button type="submit" formmethod="post">Логически удалить</button>
                 </form>
             </li>
         </th:block>

@@ -2,20 +2,17 @@ package com.hotel.hotelPrak.service;
 
 import com.hotel.hotelPrak.model.FeedbackModel;
 import com.hotel.hotelPrak.repository.FeedbackRepository;
-import com.hotel.hotelPrak.repository.inMemoryFeedbackRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
-public class inMemoryFeedbackServiceImpl implements FeedbackService{
-    private final FeedbackRepository feedbackRepository;
+public class inMemoryFeedbackServiceImpl implements FeedbackService {
 
-    public inMemoryFeedbackServiceImpl(FeedbackRepository feedbackRepository){
-        this.feedbackRepository = feedbackRepository;
-    }
-
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     @Override
     public List<FeedbackModel> findAllFeedback() {
@@ -23,39 +20,22 @@ public class inMemoryFeedbackServiceImpl implements FeedbackService{
     }
 
     @Override
-    public FeedbackModel findFeedbackById(long id) {
+    public FeedbackModel findFeedbackById(UUID id) {
         return feedbackRepository.findById(id).orElse(null);
     }
 
     @Override
-    public FeedbackModel addFeedback(FeedbackModel Feedback) {
-        return feedbackRepository.save(Feedback);
+    public FeedbackModel addFeedback(FeedbackModel feedback) {
+        return feedbackRepository.save(feedback);
     }
 
     @Override
-    public FeedbackModel updateFeedback(FeedbackModel Feedback) {
-        if(feedbackRepository.existsById(Feedback.getId())){
-            return feedbackRepository.save(Feedback);
-        }
-        return null;
+    public FeedbackModel updateFeedback(FeedbackModel feedback) {
+        return feedbackRepository.save(feedback);
     }
 
     @Override
-    public void deleteFeedback(long id) {
-        if (feedbackRepository.existsById(id)){
-            feedbackRepository.deleteById(id);
-        }
+    public void deleteFeedback(UUID id) {
+        feedbackRepository.deleteById(id);
     }
-    @Override
-    public List<FeedbackModel> findFeedbackByEvaluation(int evaluation) {
-        return feedbackRepository.findByEvaluation(evaluation);
-    }
-
-
-//    @Override
-//    public List<FeedbackModel> findFeedbackByEvaluation(int evaluation) {
-//        return feedbackRepository.findAllFeedback().stream()
-//                .filter(feedback -> feedback.getEvaluation() == evaluation)
-//                .collect(Collectors.toList());
-//    }
 }

@@ -1,23 +1,18 @@
 package com.hotel.hotelPrak.service;
 
-
 import com.hotel.hotelPrak.model.GuestModel;
 import com.hotel.hotelPrak.repository.GuestRepository;
-import com.hotel.hotelPrak.repository.inMemoryGuestRepository;
-import jakarta.annotation.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Service
 public class inMemoryGuestServiceImpl implements GuestService {
-    private final GuestRepository guestRepository;
 
-    public  inMemoryGuestServiceImpl(GuestRepository guestRepository){
-        this.guestRepository = guestRepository;
-    }
-
+    @Autowired
+    private GuestRepository guestRepository;
 
     @Override
     public List<GuestModel> findAllGuests() {
@@ -25,75 +20,25 @@ public class inMemoryGuestServiceImpl implements GuestService {
     }
 
     @Override
-    public GuestModel findGuestById(long id) {
+    public GuestModel findGuestById(UUID id) {
         return guestRepository.findById(id).orElse(null);
     }
 
-
     @Override
-    public GuestModel addGuest(GuestModel Guests) {
-        return guestRepository.save(Guests);
-    }
-
-    @Override
-    public GuestModel updateGuest(GuestModel Guests) {
-        if(guestRepository.existsById(Guests.getId())){
-            return guestRepository.save(Guests);
+    public GuestModel addGuest(GuestModel guest) {
+        if (guest.getRoomS() == null || guest.getRoomS().getId() == null) {
+            throw new IllegalArgumentException("Room must be selected");
         }
-        return null;
+        return guestRepository.save(guest);
     }
 
     @Override
-    public void deleteGuest(long id) {
-        if (guestRepository.existsById(id)){
-            guestRepository.deleteById(id);
-        }
+    public GuestModel updateGuest(GuestModel guest) {
+        return guestRepository.save(guest);
     }
 
     @Override
-    public void softDeleteGuest(long id) {
-
+    public void deleteGuest(UUID id) {
+        guestRepository.deleteById(id);
     }
-
-
-    @Override
-    public List<GuestModel> findGuestByFirstNameAndLastName(String firstName, String lastName) {
-        return guestRepository.findByFirstNameAndLastName(firstName, lastName);
-    }
-
-    @Override
-    public List<GuestModel> findGuestByFirstName(String firstName) {
-        return guestRepository.findByFirstName(firstName);
-    }
-
-    @Override
-    public List<GuestModel> findGuestByLastName(String lastName) {
-        return guestRepository.findByLastName(lastName);
-    }
-
-//    @Override
-//    public void softDeleteGuest(int id) {
-//        guestRepository.softDeleteGuest(id);  // Логическое удаление
-//    }
-
-//    @Override
-//    public List<GuestModel> findGuestByNameAndLastName(String firstName, String lastName) {
-//        return guestRepository.findAllGuests().stream()
-//                .filter(guest -> guest.getFirstName().equalsIgnoreCase(firstName) && guest.getLastName().equalsIgnoreCase(lastName))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<GuestModel> findGuestByFirstName(String firstName) {
-//        return guestRepository.findAllGuests().stream()
-//                .filter(guest -> guest.getFirstName().equalsIgnoreCase(firstName))
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public List<GuestModel> findGuestByLastName(String lastName) {
-//        return guestRepository.findAllGuests().stream()
-//                .filter(guest -> guest.getLastName().equalsIgnoreCase(lastName))
-//                .collect(Collectors.toList());
-//    }
 }

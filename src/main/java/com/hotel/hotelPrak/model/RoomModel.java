@@ -1,89 +1,51 @@
 package com.hotel.hotelPrak.model;
 
-import jakarta.annotation.Nullable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
+@Table(name = "room")
 public class RoomModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String TypeRoom;
-    private String DescriptionRoom;
-//    @Nullable возможность сделать поле нулевым
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
+    private String typeRoom;
+    private String descriptionRoom;
 
-    public RoomModel(Long id, String typeRoom, String descriptionRoom) {
-        this.id = id;
-        TypeRoom = typeRoom;
-        DescriptionRoom = descriptionRoom;
-    }
+    @OneToOne(mappedBy = "roomS", cascade = CascadeType.ALL)
+    private GuestModel guest;
 
-    public RoomModel() {
-    }
-
-    public Long getId() {
+    // Геттеры и сеттеры
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
     public String getTypeRoom() {
-        return TypeRoom;
+        return typeRoom;
     }
 
     public void setTypeRoom(String typeRoom) {
-        TypeRoom = typeRoom;
+        this.typeRoom = typeRoom;
     }
 
     public String getDescriptionRoom() {
-        return DescriptionRoom;
+        return descriptionRoom;
     }
 
     public void setDescriptionRoom(String descriptionRoom) {
-        DescriptionRoom = descriptionRoom;
+        this.descriptionRoom = descriptionRoom;
     }
 
-    //    public int getId() {
-//        return id;
-//    }
-//
-//    public String getTypeRoom() {
-//        return TypeRoom;
-//    }
-//
-//    public String getDescriptionRoom() {
-//        return DescriptionRoom;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public void setTypeRoom(String typeRoom) {
-//        TypeRoom = typeRoom;
-//    }
-//
-//    public void setDescriptionRoom(String descriptionRoom) {
-//        DescriptionRoom = descriptionRoom;
-//    }
+    public GuestModel getGuest() {
+        return guest;
+    }
 
-
+    public void setGuest(GuestModel guest) {
+        this.guest = guest;
+    }
 }
-
-
-
-//public class User{
-
-//    private int id;
-//    private String Name;
-//    private String LastName;
-//
-//
-//}
