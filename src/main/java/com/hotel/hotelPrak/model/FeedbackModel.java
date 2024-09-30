@@ -29,7 +29,6 @@ public class FeedbackModel {
     @Nullable
     private String picture;
 
-    // Геттеры и сеттеры
     public UUID getId() {
         return id;
     }

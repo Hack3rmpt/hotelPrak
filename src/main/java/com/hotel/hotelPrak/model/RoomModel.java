@@ -29,7 +29,6 @@ public class RoomModel {
     )
     private Set<GuestModel> guests = new HashSet<>();
 
-    // Геттеры и сеттеры
     public UUID getId() {
         return id;
     }
