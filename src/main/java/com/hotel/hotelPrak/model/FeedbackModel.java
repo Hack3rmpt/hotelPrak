@@ -17,6 +17,10 @@ public class FeedbackModel {
     @JoinColumn(name = "guest_id", nullable = false)
     private GuestModel guest;
 
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private RoomModel room;
+
     private int evaluation;
 
     @Size(min = 3, message = "Слишком короткий комментарий, в нем нет смысла")
@@ -40,6 +44,14 @@ public class FeedbackModel {
 
     public void setGuest(GuestModel guest) {
         this.guest = guest;
+    }
+
+    public RoomModel getRoom() {
+        return room;
+    }
+
+    public void setRoom(RoomModel room) {
+        this.room = room;
     }
 
     public int getEvaluation() {

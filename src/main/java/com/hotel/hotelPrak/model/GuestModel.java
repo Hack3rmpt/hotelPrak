@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -28,12 +28,15 @@ public class GuestModel {
     @Nullable
     private String email;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
     private RoomModel roomS;
 
     @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedbackModel> feedbacks = new ArrayList<>();
+    private Set<FeedbackModel> feedbacks = new HashSet<>();
+
+    @ManyToMany(mappedBy = "guests")
+    private Set<RoomModel> rooms = new HashSet<>();
 
     // Геттеры и сеттеры
     public UUID getId() {
@@ -92,11 +95,19 @@ public class GuestModel {
         this.roomS = roomS;
     }
 
-    public List<FeedbackModel> getFeedbacks() {
+    public Set<FeedbackModel> getFeedbacks() {
         return feedbacks;
     }
 
-    public void setFeedbacks(List<FeedbackModel> feedbacks) {
+    public void setFeedbacks(Set<FeedbackModel> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public Set<RoomModel> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(Set<RoomModel> rooms) {
+        this.rooms = rooms;
     }
 }

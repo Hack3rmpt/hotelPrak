@@ -11,6 +11,9 @@
         <select name="guest" th:field="*{guest}" required>
             <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
         </select>
+        <select name="room" th:field="*{room}" required>
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
+        </select>
         <select name="evaluation" th:field="*{evaluation}" required>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -31,11 +34,14 @@
     <ul>
         <th:block th:each="feedback: ${feedbacks}">
             <li>
-                <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName} + ' ' + ${feedback.evaluation} + ' ' + ${feedback.comment} + ' ' + ${feedback.picture}"></span>
+                <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName} + ' ' + ${feedback.room.typeRoom + ' ' + feedback.room.descriptionRoom} + ' ' + ${feedback.evaluation} + ' ' + ${feedback.comment} + ' ' + ${feedback.picture}"></span>
                 <form action="/feedback/update" method="post" style="display:inline;" th:object="${feedback}">
                     <input type="hidden" name="id" th:value="${feedback.id}">
                     <select name="guest" th:field="*{guest}" required>
                         <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+                    </select>
+                    <select name="room" th:field="*{room}" required>
+                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
                     </select>
                     <select name="evaluation" th:value="${feedback.evaluation}" required>
                         <option th:selected="${feedback.evaluation == 1}" value="1">1</option>
