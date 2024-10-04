@@ -4,6 +4,7 @@ import com.hotel.hotelPrak.model.RoomModel;
 import com.hotel.hotelPrak.service.RoomService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/room")
+@PreAuthorize("hasAnyAuthority('ADMIN')")
 public class RoomController {
     @Autowired
     public RoomService roomService;
