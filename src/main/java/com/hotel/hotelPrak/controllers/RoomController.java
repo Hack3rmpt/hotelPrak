@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/room")
-@PreAuthorize("hasAnyAuthority('ADMIN')")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'HOUSEKEEPER')")
 public class RoomController {
     @Autowired
     public RoomService roomService;
@@ -27,6 +27,7 @@ public class RoomController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HOUSEKEEPER')")
     public String addRoom(@Valid @ModelAttribute("room") RoomModel room, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("rooms", roomService.findAllRooms());
@@ -37,6 +38,8 @@ public class RoomController {
     }
 
     @PostMapping("/update")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+
     public String updateRoom(@Valid @ModelAttribute("room") RoomModel room, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("rooms", roomService.findAllRooms());

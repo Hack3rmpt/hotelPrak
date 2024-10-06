@@ -5,6 +5,7 @@
     <title>Guests List</title>
 </head>
 <body style="background-color:#fadadd">
+<div th:insert="blocks/header"></div>
 <div style="margin-left: auto; margin-right: auto; width: 500px">
     <h1>Список гостей</h1>
     <form action="/guest/add" method="post" th:object="${guest}">

@@ -5,6 +5,7 @@
     <title>Rooms List</title>
 </head>
 <body style="background-color:#fadadd">
+<div th:insert="blocks/header"></div>
 <div style="margin-left: auto; margin-right: auto; width: 500px">
     <h1>Список номеров</h1>
     <form action="/room/add" method="post" th:object="${room}">

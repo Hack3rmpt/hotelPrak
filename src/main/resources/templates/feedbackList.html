@@ -5,6 +5,8 @@
     <title>Feedback List</title>
 </head>
 <body style="background-color:#fadadd">
+<div th:insert="blocks/header"></div>
+
 <div style="margin-left: auto; margin-right: auto; width: 500px">
     <h1 style="margin-left: 25%;">Список отзывов</h1>
     <form action="/feedback/add" method="post" th:object="${feedback}">

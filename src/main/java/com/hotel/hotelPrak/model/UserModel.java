@@ -1,7 +1,9 @@
 package com.hotel.hotelPrak.model;
-
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -10,8 +12,13 @@ public class UserModel {
     @GeneratedValue
     private Long idUser;
 
+    @NotBlank(message = "Имя пользователя является обязательным")
     private String username;
+
+    @NotBlank(message = "Пароль является обязательным")
+    @Size(min = 8, message = "Длина пароля должна составлять не менее 8 символов")
     private String password;
+
     private boolean active;
 
     @ElementCollection(targetClass = RoleEnum.class, fetch = FetchType.EAGER)
@@ -20,10 +27,10 @@ public class UserModel {
     private Set<RoleEnum> roles;
 
     public UserModel() {
-
     }
 
-    public UserModel(String username, String password, boolean active, Set<RoleEnum> roles) {
+    public UserModel(Long idUser, String username, String password, boolean active, Set<RoleEnum> roles) {
+        this.idUser = idUser;
         this.username = username;
         this.password = password;
         this.active = active;
@@ -38,19 +45,19 @@ public class UserModel {
         this.idUser = idUser;
     }
 
-    public String getUsername() {
+    public @NotBlank(message = "Имя пользователя является обязательным") String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@NotBlank(message = "Имя пользователя является обязательным") String username) {
         this.username = username;
     }
 
-    public String getPassword() {
+    public @NotBlank(message = "Пароль является обязательным") @Size(min = 8, message = "Длина пароля должна составлять не менее 8 символов") String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@NotBlank(message = "Пароль является обязательным") @Size(min = 8, message = "Длина пароля должна составлять не менее 8 символов") String password) {
         this.password = password;
     }
 
@@ -70,4 +77,3 @@ public class UserModel {
         this.roles = roles;
     }
 }
-
