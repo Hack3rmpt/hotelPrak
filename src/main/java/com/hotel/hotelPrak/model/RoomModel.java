@@ -2,6 +2,7 @@ package com.hotel.hotelPrak.model;
 
 import jakarta.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -9,25 +10,36 @@ import java.util.UUID;
 @Table(name = "room")
 public class RoomModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String typeRoom;
-    private String descriptionRoom;
+    private String roomNumber;
 
-    @OneToOne(mappedBy = "roomS", cascade = CascadeType.ALL)
-    private GuestModel guest;
+    @ManyToOne
+    @JoinColumn(name = "type_id", nullable = false)
+    private RoomTypeModel roomType;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FeedbackModel> feedbacks = new HashSet<>();
+    private String status;
+    private int capacity;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "room_guest",
-            joinColumns = @JoinColumn(name = "room_id"),
-            inverseJoinColumns = @JoinColumn(name = "guest_id")
-    )
-    private Set<GuestModel> guests = new HashSet<>();
+    @OneToMany(mappedBy = "room")
+    private List<BookingModel> bookings;
+
+    @OneToMany(mappedBy = "room")
+    private List<FeedbackModel> feedbacks;
+
+    public RoomModel(UUID id, String roomNumber, RoomTypeModel roomType, String status, int capacity, List<BookingModel> bookings, List<FeedbackModel> feedbacks) {
+        this.id = id;
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.status = status;
+        this.capacity = capacity;
+        this.bookings = bookings;
+        this.feedbacks = feedbacks;
+    }
+
+    public RoomModel(){
+    }
 
     public UUID getId() {
         return id;
@@ -37,43 +49,51 @@ public class RoomModel {
         this.id = id;
     }
 
-    public String getTypeRoom() {
-        return typeRoom;
+    public String getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setTypeRoom(String typeRoom) {
-        this.typeRoom = typeRoom;
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
-    public String getDescriptionRoom() {
-        return descriptionRoom;
+    public RoomTypeModel getRoomType() {
+        return roomType;
     }
 
-    public void setDescriptionRoom(String descriptionRoom) {
-        this.descriptionRoom = descriptionRoom;
+    public void setRoomType(RoomTypeModel roomType) {
+        this.roomType = roomType;
     }
 
-    public GuestModel getGuest() {
-        return guest;
+    public String getStatus() {
+        return status;
     }
 
-    public void setGuest(GuestModel guest) {
-        this.guest = guest;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Set<FeedbackModel> getFeedbacks() {
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public List<BookingModel> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<BookingModel> bookings) {
+        this.bookings = bookings;
+    }
+
+    public List<FeedbackModel> getFeedbacks() {
         return feedbacks;
     }
 
-    public void setFeedbacks(Set<FeedbackModel> feedbacks) {
+    public void setFeedbacks(List<FeedbackModel> feedbacks) {
         this.feedbacks = feedbacks;
-    }
-
-    public Set<GuestModel> getGuests() {
-        return guests;
-    }
-
-    public void setGuests(Set<GuestModel> guests) {
-        this.guests = guests;
     }
 }

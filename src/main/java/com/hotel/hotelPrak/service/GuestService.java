@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GuestService {
+
     List<GuestModel> findAllGuests();
 
     GuestModel findGuestById(UUID id);
@@ -15,4 +16,5 @@ public interface GuestService {
     GuestModel updateGuest(GuestModel guest);
 
     void deleteGuest(UUID id);
+
 }

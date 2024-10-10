@@ -30,41 +30,86 @@
             width: 80%; /* Ширина таблицы */
             margin-top: 50px; /* Отступ сверху */
         }
+
+        .carousel-inner img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            margin-top: 50px;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
-<div th:insert="blocks/header"></div>
-<div style="margin-left: auto; margin-right: auto; width: 500px; text-align: center;">
+<div th:replace="~{blocks/header}"></div>
 
-    <table>
+<div class="container">
+    <!-- Слайдер с изображениями отеля -->
+    <div id="hotelCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://static.tourvisor.ru/hotel_pics/verybig/19/grandhotel-pupp-first-class-2.jpg" class="d-block w-100" alt="Отель 1">
+            </div>
+            <div class="carousel-item">
+                <img src="https://m.media-amazon.com/images/M/MV5BZWY5ZWQ3YmEtODhhMy00Y2MxLWE0MmItNWFlYjg3YmMxOTdjL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNTU2MDY4Njg@._V1_.jpg" class="d-block w-100" alt="Отель 2">
+            </div>
+            <div class="carousel-item">
+                <img src="https://avatars.dzeninfra.ru/get-zen_doc/1538903/pub_5e5bd93664d09a306ae338c4_5e5bd96523f6716bacbc3337/scale_1200" class="d-block w-100" alt="Отель 3">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#hotelCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <!-- Краткое описание отеля -->
+    <div class="text-center mt-5">
+        <h1>Добро пожаловать в Гранд Отель!</h1>
+        <p class="lead">Мы предлагаем вам комфортное проживание и высокий уровень сервиса. Насладитесь прекрасными видами, уютными номерами и разнообразными услугами.</p>
+    </div>
+
+    <!-- Кнопки для быстрого доступа к основным разделам сайта -->
+    <div class="text-center mt-5">
+        <a href="/guest/all" class="custom-button me-3">Гости</a>
+        <a href="/room/all" class="custom-button me-3">Комнаты</a>
+        <a href="/booking/all" class="custom-button me-3">Бронирования</a>
+        <a href="/service/all" class="custom-button">Услуги</a>
+    </div>
+
+    <!-- Таблица с основными услугами отеля -->
+    <table class="table table-bordered table-striped mt-5">
+        <thead>
         <tr>
-            <td>
-                <form action="/calculator" style="display: inline-block;">
-                    <button type="submit" class="custom-button">Go to Calculator</button>
-                </form>
-            </td>
-            <td>
-                <form action="/converter" style="display: inline-block;">
-                    <button type="submit" class="custom-button">Go to Converter</button>
-                </form>
-            </td>
+            <th>Услуга</th>
+            <th>Описание</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Бесплатный Wi-Fi</td>
+            <td>Бесплатный доступ в интернет на всей территории отеля.</td>
         </tr>
         <tr>
-            <td>
-                <form action="/guest/all" style="display: inline-block;">
-                    <button type="submit" class="custom-button">Go to Guest</button>
-                </form>
-            </td>
-            <td>
-                <form action="/room/all" style="display: inline-block;">
-                    <button type="submit" class="custom-button">Go to Rooms</button>
-                </form>
-            </td>
+            <td>Завтрак "шведский стол"</td>
+            <td>Богатый выбор блюд на завтрак.</td>
         </tr>
+        <tr>
+            <td>Фитнес-центр</td>
+            <td>Современный фитнес-центр с тренажерами и персональными тренерами.</td>
+        </tr>
+        <tr>
+            <td>Бассейн</td>
+            <td>Открытый бассейн с видом на город.</td>
+        </tr>
+        </tbody>
     </table>
-    <form action="/feedback/all">
-        <button type="submit" class="custom-button">Go to Feedbacks</button>
-    </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,37 +1,158 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Rooms List</title>
+    <title>Room List</title>
+    <style>
+        body {
+            background-color: #fadadd;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 1px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .room-form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .room-form input, .room-form select, .room-card input, .room-card select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .room-form input:focus, .room-form select:focus, .room-card input:focus, .room-card select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .room-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #e5929a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .room-form button:hover {
+            background-color: #d87f88;
+        }
+        .room-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .room-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+        .room-card:hover {
+            transform: translateY(-5px);
+        }
+        .room-card span {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .room-card form {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        .room-card button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .room-card button.update {
+            background-color: #2196F3;
+            color: white;
+        }
+        .room-card button.update:hover {
+            background-color: #1e87db;
+        }
+        .room-card button.delete {
+            background-color: #f44336;
+            color: white;
+            align-self: flex-end;
+        }
+        .room-card button.delete:hover {
+            background-color: #e53935;
+        }
+    </style>
 </head>
-<body style="background-color:#fadadd">
-<div th:insert="blocks/header"></div>
-<div style="margin-left: auto; margin-right: auto; width: 500px">
-    <h1>Список номеров</h1>
-    <form action="/room/add" method="post" th:object="${room}">
-        <input type="text" name="typeRoom" placeholder="Тип номера" th:field="*{typeRoom}" required>
-        <input type="text" name="descriptionRoom" placeholder="Описание номера" th:field="*{descriptionRoom}" required>
-        <button type="submit" formmethod="post">Добавить номер</button>
-    </form>
-    <h1>Все номера:</h1>
-    <ul>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+    <h1>Список комнат</h1>
+    <div sec:authorize="hasAnyAuthority('ADMIN', 'HOUSEKEEPER')">
+        <form action="/room/add" method="post" th:object="${room}" class="room-form">
+            <input type="text" name="roomNumber" placeholder="Номер комнаты" th:field="*{roomNumber}" required>
+            <select name="roomType" th:field="*{roomType}" required>
+                <option th:each="roomType : ${roomTypes}" th:value="${roomType.id}" th:text="${roomType.name}"></option>
+            </select>
+            <input type="text" name="status" placeholder="Статус" th:field="*{status}" required>
+            <input type="number" name="capacity" placeholder="Вместимость" th:field="*{capacity}" required>
+            <button type="submit" formmethod="post">Добавить комнату</button>
+        </form>
+    </div>
+
+    <h1>Все комнаты:</h1>
+    <div class="room-list">
         <th:block th:each="room: ${rooms}">
-            <li>
-                <span th:text="${room.typeRoom} + ' ' + ${room.descriptionRoom}"></span>
-                <form action="/room/update" method="post" style="display:inline;" th:object="${room}">
-                    <input type="hidden" name="id" th:value="${room.id}">
-                    <input type="text" name="typeRoom" th:value="${room.typeRoom}" placeholder="Тип номера" required>
-                    <input type="text" name="descriptionRoom" th:value="${room.descriptionRoom}"
-                           placeholder="Описание номера" required>
-                    <button type="submit" formmethod="post">Обновить</button>
-                </form>
-                <form action="/room/delete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${room.id}">
-                    <button type="submit" formmethod="post">Удалить</button>
-                </form>
-            </li>
+            <div class="room-card">
+                <span th:text="${room.roomNumber}"></span>
+                <span th:text="${room.roomType.name}"></span>
+                <span th:text="${room.status}"></span>
+                <span th:text="${room.capacity}"></span>
+                <div sec:authorize="hasAnyAuthority('ADMIN', 'HOUSEKEEPER')">
+                    <form action="/room/update" method="post" style="display:inline;" th:object="${room}">
+                        <input type="hidden" name="id" th:value="${room.id}">
+                        <input type="text" name="roomNumber" th:value="${room.roomNumber}" placeholder="Номер комнаты" required>
+                        <select name="roomType" th:field="*{roomType}" required>
+                            <option th:each="roomType : ${roomTypes}" th:value="${roomType.id}" th:text="${roomType.name}"></option>
+                        </select>
+                        <input type="text" name="status" th:value="${room.status}" placeholder="Статус" required>
+                        <input type="number" name="capacity" th:value="${room.capacity}" placeholder="Вместимость" required>
+                        <button type="submit" formmethod="post" class="update">Обновить</button>
+                    </form>
+                    <form action="/room/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${room.id}">
+                        <div sec:authorize="hasAnyAuthority('ADMIN')">
+                            <button type="submit" formmethod="post" class="delete">Удалить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </th:block>
-    </ul>
+    </div>
 </div>
 </body>
 </html>

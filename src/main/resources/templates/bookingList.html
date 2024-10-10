@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .booking-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .booking-form select, .booking-form input, .booking-card select, .booking-card input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .booking-form select:focus, .booking-form input:focus, .booking-card select:focus, .booking-card input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .booking-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .booking-form button:hover {
+      background-color: #d87f88;
+    }
+    .booking-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .booking-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .booking-card:hover {
+      transform: translateY(-5px);
+    }
+    .booking-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .booking-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .booking-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .booking-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .booking-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .booking-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .booking-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список бронирований</h1>
+  <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+    <form action="/booking/add" method="post" th:object="${booking}" class="booking-form">
+      <select name="guest" th:field="*{guest}" required>
+        <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+      </select>
+      <select name="room" th:field="*{room}" required>
+        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+      </select>
+      <input type="date" name="checkInDate" placeholder="Дата заезда" th:field="*{checkInDate}" required>
+      <input type="date" name="checkOutDate" placeholder="Дата выезда" th:field="*{checkOutDate}" required>
+      <input type="text" name="bookingStatus" placeholder="Статус бронирования" th:field="*{bookingStatus}" required>
+      <button type="submit" formmethod="post">Добавить бронь</button>
+    </form>
+  </div>
+
+  <h1>Все бронирования:</h1>
+  <div class="booking-list">
+    <th:block th:each="booking: ${bookings}">
+      <div class="booking-card">
+        <span th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}"></span>
+        <span th:text="${booking.room.roomNumber}"></span>
+        <span th:text="${booking.checkInDate}"></span>
+        <span th:text="${booking.checkOutDate}"></span>
+        <span th:text="${booking.bookingStatus}"></span>
+        <div sec:authorize="hasAnyAuthority('ADMIN')">
+          <form action="/booking/update" method="post" style="display:inline;" th:object="${booking}">
+            <input type="hidden" name="id" th:value="${booking.id}">
+            <select name="guest" th:field="*{guest}" required>
+              <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+            </select>
+            <select name="room" th:field="*{room}" required>
+              <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+            </select>
+            <input type="date" name="checkInDate" th:value="${booking.checkInDate}" placeholder="Дата заезда" required>
+            <input type="date" name="checkOutDate" th:value="${booking.checkOutDate}" placeholder="Дата выезда" required>
+            <input type="text" name="bookingStatus" th:value="${booking.bookingStatus}" placeholder="Статус бронирования" required>
+            <button type="submit" formmethod="post" class="update">Обновить</button>
+          </form>
+          <form action="/booking/delete" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${booking.id}">
+            <button type="submit" formmethod="post" class="delete">Удалить</button>
+          </form>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>

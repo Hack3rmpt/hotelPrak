@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Service List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .service-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .service-form input, .service-card input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .service-form input:focus, .service-card input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .service-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .service-form button:hover {
+      background-color: #d87f88;
+    }
+    .service-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .service-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+    .service-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .service-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .service-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .service-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .service-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .service-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .service-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список услуг</h1>
+  <div sec:authorize="hasAnyAuthority('ADMIN')">
+    <form action="/service/add" method="post" th:object="${service}" class="service-form">
+      <input type="text" name="serviceName" placeholder="Название услуги" th:field="*{serviceName}" required>
+      <input type="number" name="cost" placeholder="Стоимость" th:field="*{cost}" required>
+      <button type="submit" formmethod="post">Добавить услугу</button>
+    </form>
+  </div>
+
+  <h1>Все услуги:</h1>
+  <div class="service-list">
+    <th:block th:each="service: ${services}">
+      <div class="service-card">
+        <span th:text="${service.serviceName}"></span>
+        <span th:text="${service.cost}"></span>
+        <div sec:authorize="hasAnyAuthority('ADMIN')">
+          <form action="/service/update" method="post" style="display:inline;" th:object="${service}">
+            <input type="hidden" name="id" th:value="${service.id}">
+            <input type="text" name="serviceName" th:value="${service.serviceName}" placeholder="Название услуги" required>
+            <input type="number" name="cost" th:value="${service.cost}" placeholder="Стоимость" required>
+            <button type="submit" formmethod="post" class="update">Обновить</button>
+          </form>
+          <form action="/service/delete" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${service.id}">
+            <button type="submit" formmethod="post" class="delete">Удалить</button>
+          </form>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>

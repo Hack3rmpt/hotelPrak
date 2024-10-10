@@ -1,71 +1,211 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Feedback List</title>
+    <style>
+        body {
+            background-color: #fadadd;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 1px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .feedback-form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-form select, .feedback-form input, .feedback-card select, .feedback-card input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .feedback-form select:focus, .feedback-form input:focus, .feedback-card select:focus, .feedback-card input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .feedback-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #e5929a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .feedback-form button:hover {
+            background-color: #d87f88;
+        }
+        .feedback-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .feedback-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .feedback-card:hover {
+            transform: translateY(-5px);
+        }
+        .feedback-card span {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .feedback-card form {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+        .feedback-card button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .feedback-card button.update {
+            background-color: #2196F3;
+            color: white;
+        }
+        .feedback-card button.update:hover {
+            background-color: #1e87db;
+        }
+        .feedback-card button.delete {
+            background-color: #f44336;
+            color: white;
+            align-self: flex-end;
+        }
+        .feedback-card button.delete:hover {
+            background-color: #e53935;
+        }
+        .feedback-card textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .feedback-card textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .feedback-card .comment {
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Количество строк */
+            -webkit-box-orient: vertical;
+        }
+    </style>
 </head>
-<body style="background-color:#fadadd">
-<div th:insert="blocks/header"></div>
+<body>
+<div th:insert="~{blocks/header}"></div>
 
-<div style="margin-left: auto; margin-right: auto; width: 500px">
-    <h1 style="margin-left: 25%;">Список отзывов</h1>
-    <form action="/feedback/add" method="post" th:object="${feedback}">
-        <select name="guest" th:field="*{guest}" required>
-            <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
-        </select>
-        <select name="room" th:field="*{room}" required>
-            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
-        </select>
-        <select name="evaluation" th:field="*{evaluation}" required>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        <input type="text" name="comment" placeholder="Комментарий" th:field="*{comment}" required>
-        <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
-            Comment Error
-        </div>
-        <input type="text" name="picture" placeholder="Путь к картинке" th:field="*{picture}">
+<div class="container">
+    <h1>Список отзывов</h1>
+    <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+        <form action="/feedback/add" method="post" th:object="${feedback}" class="feedback-form">
+            <select name="guest" th:field="*{guest}" required>
+                <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+            </select>
+            <select name="room" th:field="*{room}" required>
+                <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+            </select>
+            <select name="evaluation" th:field="*{evaluation}" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <textarea name="comment" placeholder="Комментарий" th:field="*{comment}" required></textarea>
+            <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
+                Comment Error
+            </div>
+            <input type="text" name="picture" placeholder="Путь к картинке" th:field="*{picture}">
 
-        <button type="submit" formmethod="post">Добавить отзыв</button>
-    </form>
+            <button type="submit" formmethod="post">Добавить отзыв</button>
+        </form>
+    </div>
 
-    <h1 style="margin-left: 25%;">Все отзывы:</h1>
-    <ul>
+    <h1>Все отзывы:</h1>
+    <div class="feedback-list">
         <th:block th:each="feedback: ${feedbacks}">
-            <li>
-                <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName} + ' ' + ${feedback.room.typeRoom + ' ' + feedback.room.descriptionRoom} + ' ' + ${feedback.evaluation} + ' ' + ${feedback.comment} + ' ' + ${feedback.picture}"></span>
-                <form action="/feedback/update" method="post" style="display:inline;" th:object="${feedback}">
-                    <input type="hidden" name="id" th:value="${feedback.id}">
-                    <select name="guest" th:field="*{guest}" required>
-                        <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
-                    </select>
-                    <select name="room" th:field="*{room}" required>
-                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
-                    </select>
-                    <select name="evaluation" th:value="${feedback.evaluation}" required>
-                        <option th:selected="${feedback.evaluation == 1}" value="1">1</option>
-                        <option th:selected="${feedback.evaluation == 2}" value="2">2</option>
-                        <option th:selected="${feedback.evaluation == 3}" value="3">3</option>
-                        <option th:selected="${feedback.evaluation == 4}" value="4">4</option>
-                        <option th:selected="${feedback.evaluation == 5}" value="5">5</option>
-                    </select>
-                    <input type="text" name="comment" th:value="${feedback.comment}" placeholder="Комментарий" required>
-                    <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
-                        Comment Error
-                    </div>
-                    <input type="text" name="picture" th:value="${feedback.picture}" placeholder="Путь к картинке">
-                    <button type="submit" formmethod="post">Обновить</button>
-                </form>
-                <form action="/feedback/delete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${feedback.id}">
-                    <button type="submit" formmethod="post">Удалить</button>
-                </form>
-            </li>
+            <div class="feedback-card">
+                <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName}"></span>
+                <span th:text="${feedback.room.roomNumber}"></span>
+                <span th:text="${feedback.evaluation}"></span>
+                <span class="comment" th:text="${feedback.comment}"></span>
+                <span th:text="${feedback.picture}"></span>
+                <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+                    <form action="/feedback/update" method="post" style="display:inline;" th:object="${feedback}">
+                        <input type="hidden" name="id" th:value="${feedback.id}">
+                        <select name="guest" th:field="*{guest}" required>
+                            <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+                        </select>
+                        <select name="room" th:field="*{room}" required>
+                            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+                        </select>
+                        <select name="evaluation" th:value="${feedback.evaluation}" required>
+                            <option th:selected="${feedback.evaluation == 1}" value="1">1</option>
+                            <option th:selected="${feedback.evaluation == 2}" value="2">2</option>
+                            <option th:selected="${feedback.evaluation == 3}" value="3">3</option>
+                            <option th:selected="${feedback.evaluation == 4}" value="4">4</option>
+                            <option th:selected="${feedback.evaluation == 5}" value="5">5</option>
+                        </select>
+                        <textarea name="comment" th:value="${feedback.comment}" placeholder="Комментарий" required></textarea>
+                        <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">
+                            Comment Error
+                        </div>
+                        <input type="text" name="picture" th:value="${feedback.picture}" placeholder="Путь к картинке">
+                        <button type="submit" formmethod="post" class="update">Обновить</button>
+                    </form>
+                    <form action="/feedback/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${feedback.id}">
+                        <button type="submit" formmethod="post" class="delete">Удалить</button>
+                    </form>
+                </div>
+            </div>
         </th:block>
-    </ul>
+    </div>
 </div>
 </body>
 </html>

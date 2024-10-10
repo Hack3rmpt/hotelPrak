@@ -16,16 +16,16 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/feedback")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'HOUSEKEEPER')")
 public class FeedbackController {
     @Autowired
-    public FeedbackService feedbackService;
+    private FeedbackService feedbackService;
 
     @Autowired
-    public GuestService guestService;
+    private GuestService guestService;
 
     @Autowired
-    public RoomService roomService;
+    private RoomService roomService;
 
     @GetMapping("/all")
     public String getAllFeedbacks(Model model) {
@@ -36,6 +36,7 @@ public class FeedbackController {
         return "feedbackList";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PostMapping("/add")
     public String addFeedback(@Valid @ModelAttribute("feedback") FeedbackModel feedback, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -48,6 +49,7 @@ public class FeedbackController {
         return "redirect:/feedback/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PostMapping("/update")
     public String updateFeedback(@Valid @ModelAttribute("feedback") FeedbackModel feedback, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -60,12 +62,14 @@ public class FeedbackController {
         return "redirect:/feedback/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @PostMapping("/delete")
     public String deleteFeedback(@RequestParam UUID id) {
         feedbackService.deleteFeedback(id);
         return "redirect:/feedback/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     @GetMapping("/all/{id}")
     public String getIdFeedback(@PathVariable("id") UUID id, Model model) {
         model.addAttribute("feedback", feedbackService.findFeedbackById(id));

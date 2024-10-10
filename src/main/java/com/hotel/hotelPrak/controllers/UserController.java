@@ -56,4 +56,9 @@ public class UserController {
         userRepository.save(user);
         return "redirect:/admin/users/" + id;
     }
+
+    @GetMapping("/dashboard")
+    public String adminDashboard() {
+        return "adminDashboard";
+    }
 }

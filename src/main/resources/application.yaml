@@ -2,7 +2,7 @@ spring:
   config:
     name: school
   datasource:
-    url: jdbc:postgresql://localhost:5435/grantHoteldbLast
+    url: jdbc:postgresql://localhost:5435/grantHoteldbLastgrant
     username: postgres
     password: 1532
     driver-class-name: org.postgresql.Driver

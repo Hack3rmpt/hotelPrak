@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Guest Service List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .guest-service-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .guest-service-form select, .guest-service-form input, .guest-service-card select, .guest-service-card input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .guest-service-form select:focus, .guest-service-form input:focus, .guest-service-card select:focus, .guest-service-card input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .guest-service-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .guest-service-form button:hover {
+      background-color: #d87f88;
+    }
+    .guest-service-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .guest-service-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .guest-service-card:hover {
+      transform: translateY(-5px);
+    }
+    .guest-service-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .guest-service-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .guest-service-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .guest-service-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .guest-service-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .guest-service-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .guest-service-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список услуг гостей</h1>
+  <div sec:authorize="hasAnyAuthority('ADMIN', 'USER', 'HOUSEKEEPER')">
+    <form action="/guestService/add" method="post" th:object="${guestService}" class="guest-service-form">
+      <select name="guest" th:field="*{guest}" required>
+        <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+      </select>
+      <select name="service" th:field="*{service}" required>
+        <option th:each="service : ${services}" th:value="${service.id}" th:text="${service.serviceName + ' - ' + service.cost + ' руб.'}"></option>
+      </select>
+      <input type="date" name="serviceDate" placeholder="Дата услуги" th:field="*{serviceDate}" required>
+      <button type="submit" formmethod="post">Добавить услугу гостя</button>
+    </form>
+  </div>
+
+  <h1>Все услуги гостей:</h1>
+  <div class="guest-service-list">
+    <th:block th:each="guestService: ${guestServices}">
+      <div class="guest-service-card">
+        <span th:text="${guestService.guest.firstName + ' ' + guestService.guest.lastName}"></span>
+        <span th:text="${guestService.service.serviceName + ' - ' + guestService.service.cost + ' руб.'}"></span>
+        <span th:text="${guestService.serviceDate}"></span>
+        <div sec:authorize="hasAnyAuthority('ADMIN', 'HOUSEKEEPER')">
+          <form action="/guestService/update" method="post" style="display:inline;" th:object="${guestService}">
+            <input type="hidden" name="id" th:value="${guestService.id}">
+            <select name="guest" th:field="*{guest}" required>
+              <option th:each="guest : ${guests}" th:value="${guest.id}" th:text="${guest.firstName + ' ' + guest.lastName}"></option>
+            </select>
+            <select name="service" th:field="*{service}" required>
+              <option th:each="service : ${services}" th:value="${service.id}" th:text="${service.serviceName + ' - ' + service.cost + ' руб.'}"></option>
+            </select>
+            <input type="date" name="serviceDate" th:value="${guestService.serviceDate}" placeholder="Дата услуги" required>
+            <button type="submit" formmethod="post" class="update">Обновить</button>
+          </form>
+          <form action="/guestService/delete" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${guestService.id}">
+            <button type="submit" formmethod="post" class="delete">Удалить</button>
+          </form>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>

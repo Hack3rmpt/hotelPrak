@@ -1,63 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Guests List</title>
+    <title>Guest List</title>
+    <style>
+        body {
+            background-color: #fadadd;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 1px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .guest-form {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .guest-form input, .guest-card input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .guest-form input:focus, .guest-card input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .guest-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #e5929a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .guest-form button:hover {
+            background-color: #d87f88;
+        }
+        .guest-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .guest-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+        .guest-card:hover {
+            transform: translateY(-5px);
+        }
+        .guest-card span {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .guest-card form {
+            margin-top: 10px;
+        }
+        .guest-card button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .guest-card button.update {
+            background-color: #2196F3;
+            color: white;
+        }
+        .guest-card button.update:hover {
+            background-color: #1e87db;
+        }
+        .guest-card button.delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .guest-card button.delete:hover {
+            background-color: #e53935;
+        }
+    </style>
 </head>
-<body style="background-color:#fadadd">
-<div th:insert="blocks/header"></div>
-<div style="margin-left: auto; margin-right: auto; width: 500px">
+<body>
+<div th:insert="~{blocks/header}"></div>
+<div class="container">
     <h1>Список гостей</h1>
-    <form action="/guest/add" method="post" th:object="${guest}">
-        <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required>
-        <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required>
-        <input type="text" name="passportNumber" placeholder="Номер паспорта" th:field="*{passportNumber}" required>
-        <div th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}">
-            passportNumber not < 5
-        </div>
-        <input type="text" name="phoneNumber" placeholder="Номер телефона" th:field="*{phoneNumber}" required>
-        <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">
-            phoneNumber not < 6
-        </div>
-        <input type="text" name="email" placeholder="Email" th:field="*{email}">
-        <select name="roomS" th:field="*{roomS}" required>
-            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
-        </select>
-
-        <button type="submit" formmethod="post">Добавить гостя</button>
-    </form>
-
-    <h1>Поиск по имени и фамилии:</h1>
-    <form action="/guest/search" method="get">
-        <input type="text" name="firstName" placeholder="Имя">
-        <input type="text" name="lastName" placeholder="Фамилия">
-        <button type="submit" formmethod="get">Поиск</button>
-    </form>
+    <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
+        <form action="/guest/add" method="post" th:object="${guest}" class="guest-form">
+            <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required>
+            <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required>
+            <input type="text" name="middleName" placeholder="Отчество" th:field="*{middleName}">
+            <input type="text" name="phoneNumber" placeholder="Номер телефона" th:field="*{phoneNumber}" required>
+            <input type="text" name="email" placeholder="Email" th:field="*{email}" required>
+            <input type="text" name="passportNumber" placeholder="Номер паспорта" th:field="*{passportNumber}" required>
+            <input type="date" name="dateOfBirth" placeholder="Дата рождения" th:field="*{dateOfBirth}" required>
+            <button type="submit" formmethod="post">Добавить гостя</button>
+        </form>
+    </div>
 
     <h1>Все гости:</h1>
-    <ul>
+    <div class="guest-list">
         <th:block th:each="guest: ${guests}">
-            <li>
-                <span th:text="${guest.firstName} + ' ' + ${guest.lastName} + ' ' + ${guest.passportNumber} + ' ' + ${guest.phoneNumber} + ' ' + ${guest.email} + ' ' + ${guest.roomS.typeRoom} + ' ' + ${guest.roomS.descriptionRoom}"></span>
-                <form action="/guest/update" method="post" style="display:inline;" th:object="${guest}">
-                    <input type="hidden" name="id" th:value="${guest.id}">
-                    <input type="text" name="firstName" th:value="${guest.firstName}" placeholder="Имя" required>
-                    <input type="text" name="lastName" th:value="${guest.lastName}" placeholder="Фамилия" required>
-                    <input type="text" name="passportNumber" th:value="${guest.passportNumber}" placeholder="Номер паспорта" required>
-                    <input type="text" name="phoneNumber" th:value="${guest.phoneNumber}" placeholder="Номер телефона" required>
-                    <input type="text" name="email" th:value="${guest.email}" placeholder="Email">
-                    <select name="roomS" th:field="*{roomS}" required>
-                        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.typeRoom + ' ' + room.descriptionRoom}"></option>
-                    </select>
-                    <button type="submit" formmethod="post">Обновить</button>
-                </form>
-                <form action="/guest/delete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" th:value="${guest.id}">
-                    <button type="submit" formmethod="post">Удалить</button>
-                </form>
-            </li>
+            <div class="guest-card">
+                <span th:text="${guest.firstName}"></span>
+                <span th:text="${guest.lastName}"></span>
+                <span th:text="${guest.middleName}"></span>
+                <span th:text="${guest.phoneNumber}"></span>
+                <span th:text="${guest.email}"></span>
+                <span th:text="${guest.passportNumber}"></span>
+                <span th:text="${guest.dateOfBirth}"></span>
+                <div sec:authorize="hasAnyAuthority('ADMIN')">
+                    <form action="/guest/update" method="post" style="display:inline;" th:object="${guest}">
+                        <input type="hidden" name="id" th:value="${guest.id}">
+                        <input type="text" name="firstName" th:value="${guest.firstName}" placeholder="Имя" required>
+                        <input type="text" name="lastName" th:value="${guest.lastName}" placeholder="Фамилия" required>
+                        <input type="text" name="middleName" th:value="${guest.middleName}" placeholder="Отчество">
+                        <input type="text" name="phoneNumber" th:value="${guest.phoneNumber}" placeholder="Номер телефона" required>
+                        <input type="text" name="email" th:value="${guest.email}" placeholder="Email" required>
+                        <input type="text" name="passportNumber" th:value="${guest.passportNumber}" placeholder="Номер паспорта" required>
+                        <input type="date" name="dateOfBirth" th:value="${guest.dateOfBirth}" placeholder="Дата рождения" required>
+                        <button type="submit" formmethod="post" class="update">Обновить</button>
+                    </form>
+                    <form action="/guest/delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" th:value="${guest.id}">
+                        <button type="submit" formmethod="post" class="delete">Удалить</button>
+                    </form>
+                </div>
+            </div>
         </th:block>
-    </ul>
+    </div>
 </div>
 </body>
 </html>

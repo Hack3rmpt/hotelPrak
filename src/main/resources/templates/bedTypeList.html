@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Bed Type List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .bed-type-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .bed-type-form input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .bed-type-form input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .bed-type-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .bed-type-form button:hover {
+      background-color: #d87f88;
+    }
+    .bed-type-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .bed-type-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .bed-type-card:hover {
+      transform: translateY(-5px);
+    }
+    .bed-type-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .bed-type-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .bed-type-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .bed-type-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .bed-type-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .bed-type-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .bed-type-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список типов кроватей</h1>
+  <form action="/bedType/add" method="post" th:object="${bedType}" class="bed-type-form">
+    <input type="text" name="name" placeholder="Название" th:field="*{name}" required>
+    <button type="submit" formmethod="post">Добавить тип кровати</button>
+  </form>
+
+  <h1>Все типы кроватей:</h1>
+  <div class="bed-type-list">
+    <th:block th:each="bedType: ${bedTypes}">
+      <div class="bed-type-card">
+        <span th:text="${bedType.name}"></span>
+        <form action="/bedType/update" method="post" style="display:inline;" th:object="${bedType}">
+          <input type="hidden" name="id" th:value="${bedType.id}">
+          <input type="text" name="name" th:value="${bedType.name}" placeholder="Название" required>
+          <button type="submit" formmethod="post" class="update">Обновить</button>
+        </form>
+        <form action="/bedType/delete" method="post" style="display:inline;">
+          <input type="hidden" name="id" th:value="${bedType.id}">
+          <button type="submit" formmethod="post" class="delete">Удалить</button>
+        </form>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>

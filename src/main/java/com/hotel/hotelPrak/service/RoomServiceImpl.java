@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class inMemoryRoomServiceImpl implements RoomService {
+public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RoomRepository roomRepository;

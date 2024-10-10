@@ -1,6 +1,5 @@
 package com.hotel.hotelPrak.config;
 
-
 import com.hotel.hotelPrak.model.RoleEnum;
 import com.hotel.hotelPrak.model.UserModel;
 import com.hotel.hotelPrak.repository.UserRepository;
@@ -16,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.util.Collections;
 
@@ -68,14 +68,26 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests(authorize ->
                         authorize.requestMatchers("/login", "/registration").permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/").permitAll())
+                .formLogin(form -> form.loginPage("/login")
+                        .successHandler(authenticationSuccessHandler())
+                        .permitAll())
                 .logout(logout -> logout.permitAll())
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable());
 
         return http.build();
+    }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+                response.sendRedirect("/admin/dashboard");
+            } else if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("HOUSEKEEPER"))) {
+                response.sendRedirect("/housekeeper/dashboard");
+            } else {
+                response.sendRedirect("/");
+            }
+        };
     }
 }
-
-

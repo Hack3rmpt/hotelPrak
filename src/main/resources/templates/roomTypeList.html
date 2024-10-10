@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Room Type List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .room-type-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .room-type-form input, .room-type-card input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .room-type-form input:focus, .room-type-card input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .room-type-form button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .room-type-form button:hover {
+      background-color: #d87f88;
+    }
+    .room-type-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .room-type-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .room-type-card:hover {
+      transform: translateY(-5px);
+    }
+    .room-type-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .room-type-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .room-type-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .room-type-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .room-type-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .room-type-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .room-type-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список типов комнат</h1>
+  <div sec:authorize="hasAnyAuthority('ADMIN')">
+    <form action="/roomType/add" method="post" th:object="${roomType}" class="room-type-form">
+      <input type="text" name="name" placeholder="Название" th:field="*{name}" required>
+      <input type="text" name="description" placeholder="Описание" th:field="*{description}" required>
+      <input type="number" name="pricePerNight" placeholder="Цена за ночь" th:field="*{pricePerNight}" required>
+      <button type="submit" formmethod="post">Добавить тип комнаты</button>
+    </form>
+  </div>
+
+  <h1>Все типы комнат:</h1>
+  <div class="room-type-list">
+    <th:block th:each="roomType: ${roomTypes}">
+      <div class="room-type-card">
+        <span th:text="${roomType.name}"></span>
+        <span th:text="${roomType.description}"></span>
+        <span th:text="${roomType.pricePerNight}"></span>
+        <div sec:authorize="hasAnyAuthority('ADMIN')">
+          <form action="/roomType/update" method="post" style="display:inline;" th:object="${roomType}">
+            <input type="hidden" name="id" th:value="${roomType.id}">
+            <input type="text" name="name" th:value="${roomType.name}" placeholder="Название" required>
+            <input type="text" name="description" th:value="${roomType.description}" placeholder="Описание" required>
+            <input type="number" name="pricePerNight" th:value="${roomType.pricePerNight}" placeholder="Цена за ночь" required>
+            <button type="submit" formmethod="post" class="update">Обновить</button>
+          </form>
+          <form action="/roomType/delete" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${roomType.id}">
+            <button type="submit" formmethod="post" class="delete">Удалить</button>
+          </form>
+        </div>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>

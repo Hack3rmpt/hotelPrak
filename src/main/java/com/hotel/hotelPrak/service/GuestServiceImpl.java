@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class inMemoryGuestServiceImpl implements GuestService {
+public class GuestServiceImpl implements GuestService {
 
     @Autowired
     private GuestRepository guestRepository;
@@ -26,9 +26,6 @@ public class inMemoryGuestServiceImpl implements GuestService {
 
     @Override
     public GuestModel addGuest(GuestModel guest) {
-        if (guest.getRoomS() == null || guest.getRoomS().getId() == null) {
-            throw new IllegalArgumentException("Room must be selected");
-        }
         return guestRepository.save(guest);
     }
 

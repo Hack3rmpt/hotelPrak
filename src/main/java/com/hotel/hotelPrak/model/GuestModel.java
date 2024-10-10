@@ -3,42 +3,56 @@ package com.hotel.hotelPrak.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.springframework.lang.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "guest")
 public class GuestModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private String firstName;
     private String lastName;
-
-    @Pattern(regexp = "\\d+", message = "Серия паспорта должна содержать только цифры")
-    private String passportNumber;
+    private String middleName;
 
     @Size(min = 6, message = "Номер телефона слишком короткий")
+    @Pattern(regexp = "\\d+", message = "Номер телефона должен содержать только цифры")
     private String phoneNumber;
 
-    @Nullable
     private String email;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private RoomModel roomS;
+    @Size(min = 6, message = "Номер паспорта слишком короткий")
+    @Pattern(regexp = "\\d+", message = "Номер паспорта должен содержать только цифры")
+    private String passportNumber;
 
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<FeedbackModel> feedbacks = new HashSet<>();
+    private LocalDate dateOfBirth;
 
-    @ManyToMany(mappedBy = "guests")
-    private Set<RoomModel> rooms = new HashSet<>();
+    @OneToMany(mappedBy = "guest")
+    private List<BookingModel> bookings;
 
-    // Геттеры и сеттеры
+    @OneToMany(mappedBy = "guest")
+    private List<GuestServiceModel> guestServices;
+
+    public GuestModel(UUID id, String firstName, String lastName, String middleName, String phoneNumber, String email, String passportNumber, LocalDate dateOfBirth, List<BookingModel> bookings, List<GuestServiceModel> guestServices) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.passportNumber = passportNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.bookings = bookings;
+        this.guestServices = guestServices;
+    }
+
+    public GuestModel(){
+    }
+
     public UUID getId() {
         return id;
     }
@@ -63,19 +77,19 @@ public class GuestModel {
         this.lastName = lastName;
     }
 
-    public String getPassportNumber() {
-        return passportNumber;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    public void setPassportNumber(String passportNumber) {
-        this.passportNumber = passportNumber;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
-    public String getPhoneNumber() {
+    public @Size(min = 6, message = "Номер телефона слишком короткий") @Pattern(regexp = "\\d+", message = "Номер телефона должен содержать только цифры") String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(@Size(min = 6, message = "Номер телефона слишком короткий") @Pattern(regexp = "\\d+", message = "Номер телефона должен содержать только цифры") String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -87,27 +101,35 @@ public class GuestModel {
         this.email = email;
     }
 
-    public RoomModel getRoomS() {
-        return roomS;
+    public @Size(min = 6, message = "Номер паспорта слишком короткий") @Pattern(regexp = "\\d+", message = "Номер паспорта должен содержать только цифры") String getPassportNumber() {
+        return passportNumber;
     }
 
-    public void setRoomS(RoomModel roomS) {
-        this.roomS = roomS;
+    public void setPassportNumber(@Size(min = 6, message = "Номер паспорта слишком короткий") @Pattern(regexp = "\\d+", message = "Номер паспорта должен содержать только цифры") String passportNumber) {
+        this.passportNumber = passportNumber;
     }
 
-    public Set<FeedbackModel> getFeedbacks() {
-        return feedbacks;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setFeedbacks(Set<FeedbackModel> feedbacks) {
-        this.feedbacks = feedbacks;
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public Set<RoomModel> getRooms() {
-        return rooms;
+    public List<BookingModel> getBookings() {
+        return bookings;
     }
 
-    public void setRooms(Set<RoomModel> rooms) {
-        this.rooms = rooms;
+    public void setBookings(List<BookingModel> bookings) {
+        this.bookings = bookings;
+    }
+
+    public List<GuestServiceModel> getGuestServices() {
+        return guestServices;
+    }
+
+    public void setGuestServices(List<GuestServiceModel> guestServices) {
+        this.guestServices = guestServices;
     }
 }

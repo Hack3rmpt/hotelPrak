@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель администратора</title>
+</head>
+<body style="background-color: #fadadd">
+<div th:insert="blocks/header"></div>
+
+<div style="margin-left: auto; margin-right: auto; width: 70%; background-color: white; border-radius: 10px; padding: 20px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); margin-top: 20px;">
+  <h2 style="text-align: center;">Добро пожаловать, Администратор!</h2>
+  <p>На этой странице представлены ключевые возможности для управления отелем. Используйте представленные ниже функции для эффективного контроля ресурсов и улучшения сервиса для гостей.</p>
+
+  <div style="margin-top: 20px;">
+    <p><strong>Управление гостями:</strong> Вы можете просматривать, редактировать или удалять информацию о ваших гостях, поддерживая актуальность данных.</p>
+    <p><a href="/guest/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению гостями</a></p>
+
+    <p><strong>Управление комнатами:</strong> Добавляйте новые комнаты, редактируйте их описание, обновляйте информацию или удаляйте устаревшие данные о номерах.</p>
+    <p><a href="/room/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению комнатами</a></p>
+
+    <p><strong>Управление отзывами:</strong> Просматривайте и управляйте отзывами гостей, удаляйте неподобающие или нерелевантные комментарии.</p>
+    <p><a href="/feedback/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению отзывами</a></p>
+
+    <p><strong>Управление типами кроватей:</strong> Добавляйте и редактируйте информацию о типах кроватей, доступных в номерах вашего отеля.</p>
+    <p><a href="/bedType/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению типами кроватей</a></p>
+
+    <p><strong>Управление бронированиями:</strong> Управляйте всеми активными и завершёнными бронированиями, контролируйте статус бронирований в реальном времени.</p>
+    <p><a href="/booking/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению бронированиями</a></p>
+
+    <p><strong>Управление услугами для гостей:</strong> Добавляйте и настраивайте дополнительные услуги, доступные для ваших гостей, такие как прачечная, питание и трансфер.</p>
+    <p><a href="/guestService/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению услугами для гостей</a></p>
+
+    <p><strong>Управление типами кроватей в комнатах:</strong> Настраивайте типы кроватей в номерах для повышения удобства гостей и соответствия их запросам.</p>
+    <p><a href="/roomBed/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению кроватями в номерах</a></p>
+
+    <p><strong>Управление типами комнат:</strong> Создавайте и редактируйте категории номеров, чтобы предложить гостям разнообразие вариантов проживания.</p>
+    <p><a href="/roomType/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению типами комнат</a></p>
+
+    <p><strong>Управление услугами:</strong> Добавляйте и обновляйте услуги отеля, делая их более привлекательными для гостей.</p>
+    <p><a href="/service/all" style="color: #e5929a; text-decoration: none;">Перейти к управлению услугами</a></p>
+  </div>
+</div>
+</body>
+</html>

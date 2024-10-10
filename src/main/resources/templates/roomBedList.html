@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Room Bed List</title>
+  <style>
+    body {
+      background-color: #fadadd;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 1px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .room-bed-form {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .room-bed-form select, .room-bed-form button, .room-bed-card select, .room-bed-card button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .room-bed-form select:focus, .room-bed-form button:focus, .room-bed-card select:focus, .room-bed-card button:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    .room-bed-form button {
+      background-color: #e5929a;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+    .room-bed-form button:hover {
+      background-color: #d87f88;
+    }
+    .room-bed-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .room-bed-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+      box-sizing: border-box;
+      transition: transform 0.3s ease;
+    }
+    .room-bed-card:hover {
+      transform: translateY(-5px);
+    }
+    .room-bed-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .room-bed-card form {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .room-bed-card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .room-bed-card button.update {
+      background-color: #2196F3;
+      color: white;
+    }
+    .room-bed-card button.update:hover {
+      background-color: #1e87db;
+    }
+    .room-bed-card button.delete {
+      background-color: #f44336;
+      color: white;
+      align-self: flex-end;
+    }
+    .room-bed-card button.delete:hover {
+      background-color: #e53935;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="~{blocks/header}"></div>
+
+<div class="container">
+  <h1>Список кроватей в комнатах</h1>
+  <form action="/roomBed/add" method="post" th:object="${roomBed}" class="room-bed-form">
+    <select name="room" th:field="*{room}" required>
+      <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+    </select>
+    <select name="bedType" th:field="*{bedType}" required>
+      <option th:each="bedType : ${bedTypes}" th:value="${bedType.id}" th:text="${bedType.name}"></option>
+    </select>
+    <button type="submit" formmethod="post">Добавить кровать в комнату</button>
+  </form>
+
+  <h1>Все кровати в комнатах:</h1>
+  <div class="room-bed-list">
+    <th:block th:each="roomBed: ${roomBeds}">
+      <div class="room-bed-card">
+        <span th:text="${roomBed.room.roomNumber}"></span>
+        <span th:text="${roomBed.bedType.name}"></span>
+        <form action="/roomBed/update" method="post" style="display:inline;" th:object="${roomBed}">
+          <input type="hidden" name="id" th:value="${roomBed.id}">
+          <select name="room" th:field="*{room}" required>
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.roomNumber}"></option>
+          </select>
+          <select name="bedType" th:field="*{bedType}" required>
+            <option th:each="bedType : ${bedTypes}" th:value="${bedType.id}" th:text="${bedType.name}"></option>
+          </select>
+          <button type="submit" formmethod="post" class="update">Обновить</button>
+        </form>
+        <form action="/roomBed/delete" method="post" style="display:inline;">
+          <input type="hidden" name="id" th:value="${roomBed.id}">
+          <button type="submit" formmethod="post" class="delete">Удалить</button>
+        </form>
+      </div>
+    </th:block>
+  </div>
+</div>
+</body>
+</html>
