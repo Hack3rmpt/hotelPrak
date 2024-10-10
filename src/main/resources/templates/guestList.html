@@ -5,7 +5,7 @@
     <title>Guest List</title>
     <style>
         body {
-            background-color: #fadadd;
+            background-color: #fadadd !important;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -102,6 +102,11 @@
         .guest-card button.delete:hover {
             background-color: #e53935;
         }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -111,12 +116,26 @@
     <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">
         <form action="/guest/add" method="post" th:object="${guest}" class="guest-form">
             <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required>
+            <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
             <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required>
+            <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
             <input type="text" name="middleName" placeholder="Отчество" th:field="*{middleName}">
+            <div class="error" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}"></div>
+
             <input type="text" name="phoneNumber" placeholder="Номер телефона" th:field="*{phoneNumber}" required>
+            <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+
             <input type="text" name="email" placeholder="Email" th:field="*{email}" required>
+            <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
             <input type="text" name="passportNumber" placeholder="Номер паспорта" th:field="*{passportNumber}" required>
+            <div class="error" th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}"></div>
+
             <input type="date" name="dateOfBirth" placeholder="Дата рождения" th:field="*{dateOfBirth}" required>
+            <div class="error" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
             <button type="submit" formmethod="post">Добавить гостя</button>
         </form>
     </div>
@@ -128,20 +147,38 @@
                 <span th:text="${guest.firstName}"></span>
                 <span th:text="${guest.lastName}"></span>
                 <span th:text="${guest.middleName}"></span>
+                <p>Номер телефона</p>
                 <span th:text="${guest.phoneNumber}"></span>
+                <p>Email</p>
                 <span th:text="${guest.email}"></span>
+                <p>Сери и номер паспорта</p>
                 <span th:text="${guest.passportNumber}"></span>
+                <p>Дата рождения</p>
                 <span th:text="${guest.dateOfBirth}"></span>
                 <div sec:authorize="hasAnyAuthority('ADMIN')">
                     <form action="/guest/update" method="post" style="display:inline;" th:object="${guest}">
                         <input type="hidden" name="id" th:value="${guest.id}">
                         <input type="text" name="firstName" th:value="${guest.firstName}" placeholder="Имя" required>
+                        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
                         <input type="text" name="lastName" th:value="${guest.lastName}" placeholder="Фамилия" required>
+                        <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
                         <input type="text" name="middleName" th:value="${guest.middleName}" placeholder="Отчество">
+                        <div class="error" th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}"></div>
+
                         <input type="text" name="phoneNumber" th:value="${guest.phoneNumber}" placeholder="Номер телефона" required>
+                        <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+
                         <input type="text" name="email" th:value="${guest.email}" placeholder="Email" required>
+                        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
                         <input type="text" name="passportNumber" th:value="${guest.passportNumber}" placeholder="Номер паспорта" required>
+                        <div class="error" th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}"></div>
+
                         <input type="date" name="dateOfBirth" th:value="${guest.dateOfBirth}" placeholder="Дата рождения" required>
+                        <div class="error" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
                         <button type="submit" formmethod="post" class="update">Обновить</button>
                     </form>
                     <form action="/guest/delete" method="post" style="display:inline;">

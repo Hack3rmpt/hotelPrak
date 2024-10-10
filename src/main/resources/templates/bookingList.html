@@ -5,7 +5,7 @@
   <title>Booking List</title>
   <style>
     body {
-      background-color: #fadadd;
+      background-color: #fadadd !important;
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -131,10 +131,15 @@
   <div class="booking-list">
     <th:block th:each="booking: ${bookings}">
       <div class="booking-card">
+        <p>Пользователь</p>
         <span th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}"></span>
+        <p>Номер комнаты</p>
         <span th:text="${booking.room.roomNumber}"></span>
+        <p>Дата заезда</p>
         <span th:text="${booking.checkInDate}"></span>
+        <p>Дата выезда</p>
         <span th:text="${booking.checkOutDate}"></span>
+        <p>Статус</p>
         <span th:text="${booking.bookingStatus}"></span>
         <div sec:authorize="hasAnyAuthority('ADMIN')">
           <form action="/booking/update" method="post" style="display:inline;" th:object="${booking}">

@@ -5,7 +5,7 @@
   <title>Room Type List</title>
   <style>
     body {
-      background-color: #fadadd;
+      background-color: #fadadd !important;
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -116,6 +116,7 @@
     <form action="/roomType/add" method="post" th:object="${roomType}" class="room-type-form">
       <input type="text" name="name" placeholder="Название" th:field="*{name}" required>
       <input type="text" name="description" placeholder="Описание" th:field="*{description}" required>
+      <h4>Цена за ночь</h4>
       <input type="number" name="pricePerNight" placeholder="Цена за ночь" th:field="*{pricePerNight}" required>
       <button type="submit" formmethod="post">Добавить тип комнаты</button>
     </form>
@@ -125,8 +126,11 @@
   <div class="room-type-list">
     <th:block th:each="roomType: ${roomTypes}">
       <div class="room-type-card">
+        <p>Тип комнаты</p>
         <span th:text="${roomType.name}"></span>
+        <p>Описание комнаты</p>
         <span th:text="${roomType.description}"></span>
+        <p>Цена за ночь</p>
         <span th:text="${roomType.pricePerNight}"></span>
         <div sec:authorize="hasAnyAuthority('ADMIN')">
           <form action="/roomType/update" method="post" style="display:inline;" th:object="${roomType}">

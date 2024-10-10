@@ -5,7 +5,7 @@
     <title>Room List</title>
     <style>
         body {
-            background-color: #fadadd;
+            background-color: #fadadd !important;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -119,6 +119,7 @@
                 <option th:each="roomType : ${roomTypes}" th:value="${roomType.id}" th:text="${roomType.name}"></option>
             </select>
             <input type="text" name="status" placeholder="Статус" th:field="*{status}" required>
+            <h4>Вместимость человек</h4>
             <input type="number" name="capacity" placeholder="Вместимость" th:field="*{capacity}" required>
             <button type="submit" formmethod="post">Добавить комнату</button>
         </form>
@@ -128,9 +129,13 @@
     <div class="room-list">
         <th:block th:each="room: ${rooms}">
             <div class="room-card">
+                <p>Номер комнаты</p>
                 <span th:text="${room.roomNumber}"></span>
+                <p>Тип комнаты</p>
                 <span th:text="${room.roomType.name}"></span>
+                <p>Статус комнаты</p>
                 <span th:text="${room.status}"></span>
+                <p>Вместимость комнаты</p>
                 <span th:text="${room.capacity}"></span>
                 <div sec:authorize="hasAnyAuthority('ADMIN', 'HOUSEKEEPER')">
                     <form action="/room/update" method="post" style="display:inline;" th:object="${room}">

@@ -5,7 +5,7 @@
   <title>Service List</title>
   <style>
     body {
-      background-color: #fadadd;
+      background-color: #fadadd !important;
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -115,6 +115,7 @@
   <div sec:authorize="hasAnyAuthority('ADMIN')">
     <form action="/service/add" method="post" th:object="${service}" class="service-form">
       <input type="text" name="serviceName" placeholder="Название услуги" th:field="*{serviceName}" required>
+      <h4>Стоимость за услугу</h4>
       <input type="number" name="cost" placeholder="Стоимость" th:field="*{cost}" required>
       <button type="submit" formmethod="post">Добавить услугу</button>
     </form>
@@ -124,7 +125,9 @@
   <div class="service-list">
     <th:block th:each="service: ${services}">
       <div class="service-card">
+        <p>Наименование услуги</p>
         <span th:text="${service.serviceName}"></span>
+        <p>Цена за услугу</p>
         <span th:text="${service.cost}"></span>
         <div sec:authorize="hasAnyAuthority('ADMIN')">
           <form action="/service/update" method="post" style="display:inline;" th:object="${service}">

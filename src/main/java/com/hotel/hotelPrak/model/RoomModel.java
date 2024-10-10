@@ -1,6 +1,8 @@
 package com.hotel.hotelPrak.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +15,7 @@ public class RoomModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Pattern(regexp = "\\d+", message = "Номер телефона должен содержать только цифры")
     private String roomNumber;
 
     @ManyToOne

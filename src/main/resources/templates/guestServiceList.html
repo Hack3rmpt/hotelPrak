@@ -5,7 +5,7 @@
   <title>Guest Service List</title>
   <style>
     body {
-      background-color: #fadadd;
+      background-color: #fadadd !important;
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -129,8 +129,10 @@
   <div class="guest-service-list">
     <th:block th:each="guestService: ${guestServices}">
       <div class="guest-service-card">
+        <p>Пользователь</p>
         <span th:text="${guestService.guest.firstName + ' ' + guestService.guest.lastName}"></span>
         <span th:text="${guestService.service.serviceName + ' - ' + guestService.service.cost + ' руб.'}"></span>
+        <p>Дата предоставления услуги</p>
         <span th:text="${guestService.serviceDate}"></span>
         <div sec:authorize="hasAnyAuthority('ADMIN', 'HOUSEKEEPER')">
           <form action="/guestService/update" method="post" style="display:inline;" th:object="${guestService}">

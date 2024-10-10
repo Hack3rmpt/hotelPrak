@@ -5,7 +5,7 @@
     <title>Feedback List</title>
     <style>
         body {
-            background-color: #fadadd;
+            background-color: #fadadd !important;
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
@@ -170,9 +170,13 @@
     <div class="feedback-list">
         <th:block th:each="feedback: ${feedbacks}">
             <div class="feedback-card">
+                <p>Пользователь</p>
                 <span th:text="${feedback.guest.firstName + ' ' + feedback.guest.lastName}"></span>
+                <p>Номер комнаты</p>
                 <span th:text="${feedback.room.roomNumber}"></span>
+                <p>Оценка</p>
                 <span th:text="${feedback.evaluation}"></span>
+                <p>Коментарий</p>
                 <span class="comment" th:text="${feedback.comment}"></span>
                 <span th:text="${feedback.picture}"></span>
                 <div sec:authorize="hasAnyAuthority('ADMIN', 'USER')">

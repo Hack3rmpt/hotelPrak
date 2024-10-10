@@ -5,7 +5,7 @@
   <title>Room Bed List</title>
   <style>
     body {
-      background-color: #fadadd;
+      background-color: #fadadd !important;
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
@@ -124,7 +124,9 @@
   <div class="room-bed-list">
     <th:block th:each="roomBed: ${roomBeds}">
       <div class="room-bed-card">
+        <p>Номер комнаты</p>
         <span th:text="${roomBed.room.roomNumber}"></span>
+        <p>Тип размещения в номере</p>
         <span th:text="${roomBed.bedType.name}"></span>
         <form action="/roomBed/update" method="post" style="display:inline;" th:object="${roomBed}">
           <input type="hidden" name="id" th:value="${roomBed.id}">

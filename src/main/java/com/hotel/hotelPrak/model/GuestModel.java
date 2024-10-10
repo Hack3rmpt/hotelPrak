@@ -3,6 +3,7 @@ package com.hotel.hotelPrak.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,6 +24,7 @@ public class GuestModel {
     @Pattern(regexp = "\\d+", message = "Номер телефона должен содержать только цифры")
     private String phoneNumber;
 
+    @Nullable
     private String email;
 
     @Size(min = 6, message = "Номер паспорта слишком короткий")
